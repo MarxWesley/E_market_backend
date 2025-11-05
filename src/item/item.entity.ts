@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
+import { User } from "src/users/entities/users.entity";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
 
-@Entity({name: "Item"})
-@TableInheritance({column: {type: "varchar", name: "type"}})
+@Entity({ name: "Item" })
+@TableInheritance({ column: { type: "varchar", name: "type" } })
 export abstract class Item {
     @PrimaryGeneratedColumn()
     id: number;
@@ -21,8 +22,11 @@ export abstract class Item {
     @Column({ type: 'boolean' })
     active: boolean;
 
-    // userId: number; 
-    // img
+    @ManyToOne(() => User, (user) => user.items, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE"
+    })
+    userId: User;
 
     @CreateDateColumn()
     createdAt?: Date;
