@@ -1,36 +1,68 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { Users } from './entities/users.entity';
+import * as bcrypt from 'bcrypt';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UsersService {
-  constructor (
+  constructor(
+    @InjectRepository(Users)
     private usersRepository: Repository<Users>
-  ){}
+  ) { }
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    const hash = await bcrypt.hash(createUserDto.password, 10);
+
+    const user = this.usersRepository.create({
+      ...createUserDto,
+      password: hash
+    })
+
+    return this.usersRepository.save(user);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return await this.usersRepository.find()
   }
 
   async findOne(id: number) {
-    return await this.usersRepository.findOne({where: {id}});
+    const user = await this.usersRepository.findOne({ where: { id } });
+
+    if (!user) throw new NotFoundException("Usuário não encontrado")
+
+    return user;
   }
 
   async findByEmail(email: string) {
-    return await this.usersRepository.findOne({where: {email}})
+    const user = await this.usersRepository.findOne({ where: { email } })
+
+    if (!user) throw new NotFoundException("Usuário não encontrado")
+
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const userToUpdate = await this.findOne(id);
+
+    if (updateUserDto.email && updateUserDto.email !== userToUpdate.email) {
+      const emailExists = await this.findByEmail(updateUserDto.email);
+
+      if (emailExists) {
+        throw new ConflictException('Este e-mail já está em uso por outro usuário.');
+      }
+    }
+
+    // Atualiza e salva
+    const updatedUser = this.usersRepository.merge(userToUpdate, updateUserDto);
+    return this.usersRepository.save(updatedUser);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const user = await this.findOne(id);
+
+    return this.usersRepository.remove(user);
   }
 }

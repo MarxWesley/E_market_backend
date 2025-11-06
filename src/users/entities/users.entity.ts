@@ -6,19 +6,19 @@ export class Users {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({type: 'varchar', name: 'name', nullable: false, length: 255})
     name: string;
 
-    @Column()
+    @Column({type: 'varchar', nullable: false, length: 255, unique: true})
     email: string;
 
-    @Column()
+    @Column({type: 'varchar', nullable: false, length: 14, unique: true})
     cpf: string;
 
-    @Column()
+    @Column({type: 'varchar', nullable: false, length: 100})
     password: string;
 
-    @OneToMany(() => Item, (item) => item.userId, {
+    @OneToMany(() => Item, (item) => item.user, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE"
     })

@@ -1,4 +1,4 @@
-import { User } from "src/users/entities/users.entity";
+import { Users } from "src/users/entities/users.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
 
 @Entity({ name: "Item" })
@@ -22,11 +22,11 @@ export abstract class Item {
     @Column({ type: 'boolean' })
     active: boolean;
 
-    @ManyToOne(() => User, (user) => user.items, {
+    @ManyToOne(() => Users, (user) => user.items, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE"
     })
-    userId: User;
+    user: Users;
 
     @CreateDateColumn()
     createdAt?: Date;

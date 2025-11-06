@@ -24,6 +24,8 @@ export class ItemRepository {
     }
 
     // async findByUser(userId: number): Promise<Item[]> {
+    //     const userItems = this.repo.find({where: {userId}})
+
     //     return this.repo.find({
     //         where: { userId },
     //         order: {createdAt: "DESC"}

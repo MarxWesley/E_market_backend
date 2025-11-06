@@ -23,7 +23,4 @@ export class Vehicle extends Product {
     
     @Column({ type: "varchar", nullable: true })
     transmission?: string;
-
-    // images
-    // userId
 }

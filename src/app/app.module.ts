@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as dotenv from 'dotenv';
+import { UsersModule } from 'src/users/users.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 dotenv.config()
 
@@ -12,7 +13,7 @@ dotenv.config()
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
-      port: Number(process.env.PROTGRES_PORT),
+      port: Number(process.env.POSTGRES_PORT),
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASS,
       database: process.env.DB_NAME,
@@ -22,9 +23,10 @@ dotenv.config()
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env'
-    })
+    }),
+    UsersModule,
+    AuthModule,
   ],
-  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule { }
