@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsEmail, IsEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsEmpty, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreateUserDto {
     @Transform(({ value }) => value.toUpperCase().trim())
     @IsString({ message: 'O nome deve ser uma string' })
-    @IsEmpty({ message: 'O nome é obrigatório' })
+    @IsNotEmpty({ message: 'O nome é obrigatório' })
     @MaxLength(255)
     @ApiProperty({
         type: 'string',
@@ -17,7 +17,7 @@ export class CreateUserDto {
 
     @Transform(({ value }) => value.toLowerCase().trim())
     @IsEmail()
-    @IsEmpty({ message: 'O email é obrigatório' })
+    @IsNotEmpty({ message: 'O email é obrigatório' })
     @ApiProperty({
         type: 'string',
         description: 'email do usuário',
@@ -27,7 +27,7 @@ export class CreateUserDto {
     readonly email: string;
 
     @Transform(({ value }) => value.toLowerCase().trim())
-    @IsEmpty({ message: 'O CPF é obrigatório' })
+    @IsNotEmpty({ message: 'O CPF é obrigatório' })
     @ApiProperty({
         type: 'string',
         description: 'CPF do usuário',
@@ -37,7 +37,7 @@ export class CreateUserDto {
     @MinLength(11)
     readonly cpf: string;
 
-    @IsEmpty({ message: "A senha é obrigatória" })
+    @IsNotEmpty({ message: "A senha é obrigatória" })
     @MinLength(6)
     @MaxLength(255)
     @ApiProperty({

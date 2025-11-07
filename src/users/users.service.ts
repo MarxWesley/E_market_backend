@@ -37,10 +37,8 @@ export class UsersService {
   }
 
   async findByEmail(email: string) {
-    const user = await this.usersRepository.findOne({ where: { email } })
-
-    if (!user) throw new NotFoundException("Usuário não encontrado")
-
+    const user = await this.usersRepository.findOne({ where: { email } });
+    if (!user) throw new NotFoundException('Usuário não encontrado');
     return user;
   }
 
@@ -55,8 +53,14 @@ export class UsersService {
       }
     }
 
+    const dataToUpdate = { ...updateUserDto };
+
+    if (dataToUpdate.password) {
+      dataToUpdate.password = await bcrypt.hash(dataToUpdate.password, 10);
+    }
+
     // Atualiza e salva
-    const updatedUser = this.usersRepository.merge(userToUpdate, updateUserDto);
+    const updatedUser = this.usersRepository.merge(userToUpdate, dataToUpdate);
     return this.usersRepository.save(updatedUser);
   }
 

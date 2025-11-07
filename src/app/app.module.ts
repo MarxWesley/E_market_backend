@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as dotenv from 'dotenv';
 import { UsersModule } from 'src/users/users.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { ProductModule } from 'src/product/product.module';
 
 dotenv.config()
 
@@ -24,8 +25,9 @@ dotenv.config()
       isGlobal: true,
       envFilePath: '.env'
     }),
-    UsersModule,
     AuthModule,
+    UsersModule,
+    ProductModule,
   ],
   providers: [AppService],
 })

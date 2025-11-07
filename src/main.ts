@@ -22,8 +22,14 @@ async function bootstrap() {
     .setTitle('API E-Market')
     .setDescription('API desenvolvida para o aplicativo de e-commerce, E-Market')
     .setVersion('1.0')
-    .addBearerAuth()
-    .addTag('App', 'Tag para teste')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT'
+      },
+      'access-token',
+    )
     .build()
 
   const document = SwaggerModule.createDocument(app, config);

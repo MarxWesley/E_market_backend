@@ -6,14 +6,14 @@ import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('login')
-  @ApiOperation({summary: 'Realizar login'})
-  async create(@Body() createAuthDto: CreateAuthDto) {
-    const user = await this.authService.userValidation(createAuthDto.email, createAuthDto.password);
+  @ApiOperation({ summary: 'Realizar login' })
+  async login(@Body() createAuthDto: CreateAuthDto) {
+    const user = await this.authService.userValidation(createAuthDto);
 
-    if(!user) throw new UnauthorizedException('Credenciais inválidas');
+    if (!user) throw new UnauthorizedException();
 
     return this.authService.login(user);
   }
