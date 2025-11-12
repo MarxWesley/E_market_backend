@@ -21,7 +21,7 @@ export class UsersController {
   @ApiBearerAuth('access-token')
   @ApiQuery({ name: 'email', required: false, description: 'Filtra usuários pelo e-mail' })
   find(@Query('email') email?: string) {
-    if (email) return this.usersService.findByEmail(email);
+    if (email) return this.usersService.findByEmailOrFail(email);
     return this.usersService.findAll();
   }
 

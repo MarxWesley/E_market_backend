@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv';
 import { UsersModule } from 'src/users/users.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { ProductModule } from 'src/product/product.module';
+import { VehicleModule } from 'src/vehicle/vehicle.module';
 
 dotenv.config()
 
@@ -28,6 +29,7 @@ dotenv.config()
     AuthModule,
     UsersModule,
     ProductModule,
+    VehicleModule
   ],
   providers: [AppService],
 })

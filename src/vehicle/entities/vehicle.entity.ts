@@ -1,8 +1,8 @@
-import { Product } from "src/product/entities/product.entity";
+import { Item } from "src/item/item.entity";
 import { ChildEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @ChildEntity({ name: 'vehicle' })
-export class Vehicle extends Product {
+export class Vehicle extends Item {
     @Column({ type: 'varchar', length: 255, nullable: false })
     type: string;
 

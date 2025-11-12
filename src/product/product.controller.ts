@@ -51,6 +51,6 @@ export class ProductController {
   @ApiOperation({ summary: "Exclui produto pelo id" })
   @ApiParam({name: 'id', required: true, description: 'Remove produto pelo id'})
   remove(@Param('id') id: number, @Req() req) {
-    return this.productService.remove(id, req);
+    return this.productService.remove(id, req.user);
   }
 }

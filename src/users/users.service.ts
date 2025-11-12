@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
@@ -15,6 +15,17 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     const hash = await bcrypt.hash(createUserDto.password, 10);
+
+    const emailAlreadyExist = await this.findByEmail(createUserDto.email)
+    const cpfAlreadyExist = await this.findByCpf(createUserDto.cpf)
+
+    if (emailAlreadyExist) {
+      throw new ForbiddenException("Este email já está em uso!")
+    }
+
+    if (cpfAlreadyExist) {
+      throw new ForbiddenException("Este CPF já está em uso!")
+    }
 
     const user = this.usersRepository.create({
       ...createUserDto,
@@ -37,7 +48,21 @@ export class UsersService {
   }
 
   async findByEmail(email: string) {
+    return this.usersRepository.findOne({ where: { email } });
+  }
+
+  async findByCpf(cpf: string) {
+    return this.usersRepository.findOne({ where: { cpf } });
+  }
+
+  async findByEmailOrFail(email: string) {
     const user = await this.usersRepository.findOne({ where: { email } });
+    if (!user) throw new NotFoundException('Usuário não encontrado');
+    return user;
+  }
+
+  async findByCpfOrFail(cpf: string) {
+    const user = await this.usersRepository.findOne({ where: { cpf } });
     if (!user) throw new NotFoundException('Usuário não encontrado');
     return user;
   }
@@ -46,7 +71,7 @@ export class UsersService {
     const userToUpdate = await this.findOne(id);
 
     if (updateUserDto.email && updateUserDto.email !== userToUpdate.email) {
-      const emailExists = await this.findByEmail(updateUserDto.email);
+      const emailExists = await this.findByEmailOrFail(updateUserDto.email);
 
       if (emailExists) {
         throw new ConflictException('Este e-mail já está em uso por outro usuário.');
