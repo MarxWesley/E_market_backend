@@ -16,7 +16,7 @@ export class CreateUserDto {
     readonly name: string;
 
     @Transform(({ value }) => value.toLowerCase().trim())
-    @IsEmail()
+    @IsEmail({}, {message:"Formato de email inválido"})
     @IsNotEmpty({ message: 'O email é obrigatório' })
     @ApiProperty({
         type: 'string',

@@ -19,7 +19,7 @@ export abstract class Item {
     @Column({ type: 'text', nullable: true })
     description?: string;
 
-    @Column({ type: 'boolean' })
+    @Column({ type: 'boolean', default: true })
     active: boolean;
 
     @ManyToOne(() => Users, (user) => user.items, {

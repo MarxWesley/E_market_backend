@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class ProductService {
@@ -12,13 +12,20 @@ export class ProductService {
     private productRepository: Repository<Product>
   ) { }
 
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  create(createProductDto: CreateProductDto, user: any) {
+    const product = this.productRepository.create({
+      ...createProductDto,
+      user: { id: user.userId },
+    })
+
+    console.log(product)
+
+    return this.productRepository.save(product);
   }
 
   async findAll() {
     try {
-      return await this.productRepository.find();
+      return await this.productRepository.find({ relations: ['user'] });
     } catch (error) {
       throw error
     }
@@ -26,7 +33,7 @@ export class ProductService {
 
   async findOne(id: number) {
     try {
-      const product = await this.productRepository.findOne({ where: { id } });
+      const product = await this.productRepository.findOne({ where: { id }, relations: ['user'] });
 
       if (!product) throw new NotFoundException("Produto não encontrado")
 
@@ -37,9 +44,16 @@ export class ProductService {
     }
   }
 
-  async findByName (title: string) {
+  async findByName(title: string) {
     try {
-      const product = await this.productRepository.findOne({ where: { title } });
+      const product = await this.productRepository.findOne(
+        {
+          where: [
+            { title: ILike(`%${title}%`) },
+            { description: ILike(`%${title}%`) }
+          ]
+        }
+      );
 
       if (!product) throw new NotFoundException("Produto não encontrado")
 
@@ -50,11 +64,24 @@ export class ProductService {
     }
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: number, updateProductDto: UpdateProductDto, user: any) {
+    const productToUpdate = await this.findOne(id);
+
+    if (productToUpdate.user.id !== user.userId) {
+      throw new ForbiddenException('Você não tem permissão para editar esse produto, pois pertence a outro usuário');
+    }
+
+    const updatedProduct = this.productRepository.merge(productToUpdate, updateProductDto);
+    return this.productRepository.save(updatedProduct)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number, user: any) {
+    const product = await this.findOne(id);
+
+    if (product.user.id !== user.userId) {
+      throw new ForbiddenException('Você não tem permissão para remover esse produto, pois pertence a outro usuário');
+    }
+
+    return this.productRepository.remove(product);
   }
 }

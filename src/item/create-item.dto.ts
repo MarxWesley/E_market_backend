@@ -1,24 +1,53 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export abstract class CreateItemDto {
-    @IsString()
-    @IsNotEmpty()
+    @IsString({message: "Título deve ser string"})
+    @IsNotEmpty({message: "Título é obrigatório"})
+    @ApiProperty({
+        type: 'string',
+        description: 'título do item',
+        example: 'Novo Item',
+        nullable: false
+    })
     title: string;
 
-    @IsNumber({ maxDecimalPlaces: 2 })
+    @IsNumber({ maxDecimalPlaces: 2 }, {message:"Preço deve ser um número"})
     @Type(() => Number)
+    @ApiProperty({
+        type: 'number',
+        description: 'preço do item',
+        example: 10.50,
+        nullable: false
+    })
     price: number;
 
-    @IsString()
-    @IsNotEmpty()
+    @IsString({message: "Categoria deve ser string"})
+    @IsNotEmpty({message: "Categoria é obrigatório"})
+    @ApiProperty({
+        type: 'string',
+        description: 'categoria do item',
+        example: 'Artigos Esportivos',
+        nullable: false
+    })
     category: string;
 
-    @IsBoolean()
+    @IsString({message: "Descrição deve ser string"})
+    @ApiProperty({
+        type: 'string',
+        description: 'Descrição do item',
+        example: 'Aqui está uma breve descrição do item, cor preto e etc',
+        nullable: false
+    })
+    description: string;
+    
+    @IsBoolean({message:"Ativo deve ser True ou False"})
     @Type(() => Boolean)
+    @ApiProperty({
+        type: 'string',
+        description: 'Se o item ainda está ativo ou não',
+        example: true
+    })
     active: boolean;
-
-    @IsNumber()
-    @Type(() => Number)
-    userId: number; // usamos o id do usuário no DTO, não a entidade inteira
 }
