@@ -2,7 +2,7 @@ import { Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ItemService } from './item.service';
 
-@ApiTags('Itens')
+@ApiTags('Items')
 @Controller('items')
 export class ItemController {
     constructor(private readonly itemService: ItemService) { }

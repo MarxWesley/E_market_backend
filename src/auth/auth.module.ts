@@ -18,6 +18,6 @@ import { UsersService } from 'src/users/users.service';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  exports: [PassportModule, JwtModule, AuthService]
+  exports: [PassportModule, AuthService]
 })
 export class AuthModule {}

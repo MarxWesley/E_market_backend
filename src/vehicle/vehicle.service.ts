@@ -13,6 +13,20 @@ export class VehicleService {
   ) { }
 
   async create(createVehicleDto: CreateVehicleDto, user: any) {
+    if (createVehicleDto.price <= 0) {
+      throw new ForbiddenException('O preço do veículo deve ser maior que zero');
+    }
+
+    if (createVehicleDto.year < 1886) {
+      throw new ForbiddenException('O ano do veículo não pode ser menor que 1886');
+    } else if (createVehicleDto.year > new Date().getFullYear() + 1) {
+      throw new ForbiddenException(`O ano do veículo não pode ser maior que ${new Date().getFullYear() + 1}`);
+    }
+
+    if (createVehicleDto.mileage < 0) {
+      throw new ForbiddenException('A quilometragem do veículo não pode ser negativa');
+    }
+
     const vehicle = this.vehicleRepository.create({
       ...createVehicleDto,
       user: { id: user.userId },
@@ -23,13 +37,28 @@ export class VehicleService {
   }
 
   async findAll() {
-    return await this.vehicleRepository.find({ relations: ['user'] });
+    return await this.vehicleRepository.find({
+      relations: ['user'],
+      select: {
+        user: {
+          id: true,
+          name: true,
+        }
+      }
+    });
   }
 
 
   async findOne(id: number) {
     try {
-      const vehicle = await this.vehicleRepository.findOne({ where: { id }, relations: ['user'] });
+      const vehicle = await this.vehicleRepository.findOne({
+        where: { id }, relations: ['user'], select: {
+          user: {
+            id: true,
+            name: true,
+          }
+        }
+      });
 
       if (!vehicle) throw new NotFoundException("Veículo não encontrado")
 
@@ -50,7 +79,14 @@ export class VehicleService {
             { model: ILike(`%${title}%`) },
             { brand: ILike(`%${title}%`) },
             { type: ILike(`%${title}%`) },
-          ]
+          ],
+          select: {
+            user: {
+              id: true,
+              name: true,
+            }
+          },
+          relations: ['user']
         }
       );
 
@@ -68,6 +104,20 @@ export class VehicleService {
 
     if (vehicleToUpdate.user.id !== user.userId) {
       throw new ForbiddenException('Você não tem permissão para editar esse veículo, pois pertence a outro usuário');
+    }
+
+    if (updateVehicleDto.price && updateVehicleDto.price <= 0) {
+      throw new ForbiddenException('O preço do veículo deve ser maior que zero');
+    }
+
+    if (updateVehicleDto.year && updateVehicleDto.year < 1886) {
+      throw new ForbiddenException('O ano do veículo não pode ser menor que 1886');
+    } else if (updateVehicleDto.year && updateVehicleDto.year > new Date().getFullYear() + 1) {
+      throw new ForbiddenException(`O ano do veículo não pode ser maior que ${new Date().getFullYear() + 1}`);
+    }
+
+    if (updateVehicleDto.mileage && updateVehicleDto.mileage < 0) {
+      throw new ForbiddenException('A quilometragem do veículo não pode ser negativa');
     }
 
     const vehicleUpdated = this.vehicleRepository.merge(vehicleToUpdate, updateVehicleDto);

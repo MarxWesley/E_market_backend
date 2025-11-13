@@ -13,6 +13,10 @@ export class ProductService {
   ) { }
 
   create(createProductDto: CreateProductDto, user: any) {
+    if (createProductDto.price <= 0) {
+      throw new ForbiddenException('O preço do produto deve ser maior que zero');
+    }
+
     const product = this.productRepository.create({
       ...createProductDto,
       user: { id: user.userId },
@@ -87,6 +91,10 @@ export class ProductService {
 
     if (productToUpdate.user.id !== user.userId) {
       throw new ForbiddenException('Você não tem permissão para editar esse produto, pois pertence a outro usuário');
+    }
+
+    if (updateProductDto.price && updateProductDto.price <= 0) {
+      throw new ForbiddenException('O preço do produto deve ser maior que zero');
     }
 
     const updatedProduct = this.productRepository.merge(productToUpdate, updateProductDto);
