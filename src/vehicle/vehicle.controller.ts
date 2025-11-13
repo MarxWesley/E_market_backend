@@ -9,14 +9,6 @@ import { AuthGuard } from '@nestjs/passport';
 export class VehicleController {
   constructor(private readonly vehicleService: VehicleService) {}
 
-  @Post()
-  @ApiOperation({ summary: "Cria um veículo" })
-  @ApiBearerAuth('access-token')
-  @UseGuards(AuthGuard('jwt'))
-  async create(@Body() createVehicleDto: CreateVehicleDto, @Request() req) {
-    return this.vehicleService.create(createVehicleDto, req.user);
-  }
-
   @Get()
   @ApiOperation({ summary: "Listar todos veículos" })
   @ApiBearerAuth('access-token')
@@ -33,14 +25,6 @@ export class VehicleController {
   @UseGuards(AuthGuard('jwt'))
   findOne(@Param('id') id: number) {
     return this.vehicleService.findOne(id);
-  }
-
-  @Patch(':id')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
-  @ApiOperation({ summary: "Atualiza veículo por id" })
-  update(@Param('id') id: number, @Body() updateVehicleDto: UpdateVehicleDto, @Req() req) {
-    return this.vehicleService.update(id, updateVehicleDto, req.user);
   }
 
   @Delete(':id')

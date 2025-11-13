@@ -41,7 +41,7 @@ export class ItemService {
     }
 
     async findOne(id: number) {
-        // Busca em ambas as tabelas herdadas
+        // tenta achar um produto
         const product = await this.productRepository.findOne({
             where: { id },
             relations: ['user', 'favorite'],
@@ -53,10 +53,9 @@ export class ItemService {
             }
         });
 
-        if (!product) throw new NotFoundException('Item não encontrado');
-
         if (product) return product;
 
+        // se não for product, tenta vehicle
         const vehicle = await this.vehicleRepository.findOne({
             where: { id },
             relations: ['user', 'favorite'],
@@ -68,10 +67,12 @@ export class ItemService {
             }
         });
 
-        if (!vehicle) throw new NotFoundException('Item não encontrado');
+        if (vehicle) return vehicle;
 
-        return vehicle;
+        // se nenhum dos dois existir
+        throw new NotFoundException('Item não encontrado');
     }
+
 
     async findByType(type: string) {
         if (type === 'product') {
