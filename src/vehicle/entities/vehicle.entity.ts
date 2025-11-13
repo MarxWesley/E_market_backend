@@ -1,11 +1,8 @@
-import { Item } from "src/item/item.entity";
+import { Item } from "src/item/entities/item.entity";
 import { ChildEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@ChildEntity({ name: 'vehicle' })
+@ChildEntity('vehicle')
 export class Vehicle extends Item {
-    @Column({ type: 'varchar', length: 255, nullable: false })
-    type: string;
-
     @Column({ type: 'int', nullable: false })
     year: number;
 

@@ -7,6 +7,8 @@ import { UsersModule } from 'src/users/users.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { ProductModule } from 'src/product/product.module';
 import { VehicleModule } from 'src/vehicle/vehicle.module';
+import { FavoriteModule } from 'src/favorite/favorite.module';
+import { ItemModule } from 'src/item/item.module';
 
 dotenv.config()
 
@@ -29,7 +31,9 @@ dotenv.config()
     AuthModule,
     UsersModule,
     ProductModule,
-    VehicleModule
+    VehicleModule,
+    FavoriteModule,
+    ItemModule
   ],
   providers: [AppService],
 })

@@ -1,5 +1,6 @@
-import { Item } from "src/item/item.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Favorite } from "src/favorite/entities/favorite.entity";
+import { Item } from "src/item/entities/item.entity";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: "Users" })
 export class Users {
@@ -23,4 +24,10 @@ export class Users {
         onUpdate: "CASCADE"
     })
     items: Item[]
+
+    @OneToMany(() => Favorite, (favorite) => favorite.user, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE"
+    })
+    favorite: Favorite[];
 }

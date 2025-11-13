@@ -26,7 +26,7 @@ export class CreateUserDto {
     })
     readonly email: string;
 
-    @Transform(({ value }) => value.toLowerCase().trim())
+    @Transform(({ value }) => value.toLowerCase().trim().replace(/[\.\-\_]/g, ''))
     @IsNotEmpty({ message: 'O CPF é obrigatório' })
     @ApiProperty({
         type: 'string',
@@ -37,6 +37,7 @@ export class CreateUserDto {
     @MinLength(11)
     readonly cpf: string;
 
+    @Transform(({ value }) => value.trim())
     @IsNotEmpty({ message: "A senha é obrigatória" })
     @MinLength(6)
     @MaxLength(255)

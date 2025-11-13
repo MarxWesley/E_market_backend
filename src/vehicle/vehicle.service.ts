@@ -16,6 +16,7 @@ export class VehicleService {
     const vehicle = this.vehicleRepository.create({
       ...createVehicleDto,
       user: { id: user.userId },
+      type: 'vehicle',
     });
 
     return await this.vehicleRepository.save(vehicle);

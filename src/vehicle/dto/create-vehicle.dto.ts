@@ -1,18 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { CreateItemDto } from "src/item/create-item.dto";
+import { CreateItemDto } from "src/item/dto/create-item.dto";
 
 export class CreateVehicleDto extends CreateItemDto{
-    @IsString({message: "Tipo deve ser string"})
-    @IsNotEmpty({message: "Tipo é obrigatório"})
-    @ApiProperty({
-        type: 'string',
-        description: 'tipo do veículo',
-        example: 'Carro',
-        nullable: false
-    })
-    type: string;
-
     @IsNotEmpty({message: "Ano é obrigatório"})
     @IsNumber({}, {message: "Ano deve ser número"})
     @ApiProperty({
@@ -23,6 +14,7 @@ export class CreateVehicleDto extends CreateItemDto{
     })
     year: number;
 
+    @Transform(({ value }) => value.trim().toUpperCase())
     @IsString({message: "Marca deve ser string"})
     @IsNotEmpty({message: "Marca é obrigatória"})
     @ApiProperty({
@@ -33,6 +25,7 @@ export class CreateVehicleDto extends CreateItemDto{
     })
     brand: string;
 
+    @Transform(({ value }) => value.trim().toUpperCase())
     @IsString({message: "Modelo deve ser string"})
     @IsNotEmpty({message: "Modelo é obrigatório"})
     @ApiProperty({
@@ -53,6 +46,7 @@ export class CreateVehicleDto extends CreateItemDto{
     })
     mileage: number;
 
+    @Transform(({ value }) => value.trim())
     @IsString({message: "Tipo de combustível deve ser string"})
     @ApiProperty({
         type: 'string',
@@ -62,6 +56,7 @@ export class CreateVehicleDto extends CreateItemDto{
     })
     fuelType?: string;
 
+    @Transform(({ value }) => value.trim())
     @IsString({message: "Tipo de transmissão deve ser string"})
     @ApiProperty({
         type: 'string',

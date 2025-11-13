@@ -16,16 +16,24 @@ export class ProductService {
     const product = this.productRepository.create({
       ...createProductDto,
       user: { id: user.userId },
+      type: 'product',
     })
-
-    console.log(product)
 
     return this.productRepository.save(product);
   }
 
   async findAll() {
     try {
-      return await this.productRepository.find({ relations: ['user'] });
+      return await this.productRepository.find(
+        {
+          relations: ['user'],
+          select: {
+            user: {
+              id: true,
+              name: true,
+            }
+          }
+        });
     } catch (error) {
       throw error
     }
@@ -33,7 +41,17 @@ export class ProductService {
 
   async findOne(id: number) {
     try {
-      const product = await this.productRepository.findOne({ where: { id }, relations: ['user'] });
+      const product = await this.productRepository.findOne(
+        {
+          where: { id },
+          relations: ['user'],
+          select: {
+            user: {
+              id: true,
+              name: true,
+            }
+          }
+        });
 
       if (!product) throw new NotFoundException("Produto não encontrado")
 

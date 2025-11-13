@@ -14,9 +14,7 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors({
-    origin: 'http://localhost:8081',
-  })
+  app.enableCors();
 
   const config = new DocumentBuilder()
     .setTitle('API E-Market')

@@ -1,8 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export abstract class CreateItemDto {
+    @Transform(({ value }) => value.trim())
     @IsString({message: "Título deve ser string"})
     @IsNotEmpty({message: "Título é obrigatório"})
     @ApiProperty({
@@ -23,6 +24,7 @@ export abstract class CreateItemDto {
     })
     price: number;
 
+    @Transform(({ value }) => value.trim().toUpperCase())
     @IsString({message: "Categoria deve ser string"})
     @IsNotEmpty({message: "Categoria é obrigatório"})
     @ApiProperty({
@@ -33,6 +35,7 @@ export abstract class CreateItemDto {
     })
     category: string;
 
+    @Transform(({ value }) => value.trim())
     @IsString({message: "Descrição deve ser string"})
     @ApiProperty({
         type: 'string',
@@ -41,13 +44,4 @@ export abstract class CreateItemDto {
         nullable: false
     })
     description: string;
-    
-    @IsBoolean({message:"Ativo deve ser True ou False"})
-    @Type(() => Boolean)
-    @ApiProperty({
-        type: 'string',
-        description: 'Se o item ainda está ativo ou não',
-        example: true
-    })
-    active: boolean;
 }

@@ -19,7 +19,6 @@ export class ProductController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  @Get()
   @ApiOperation({ summary: "Listar todos produtos ou buscar por filtros" })
   @ApiBearerAuth('access-token')
   @ApiQuery({ name: 'title', required: false, description: 'Filtrar produto pelo título ou descrição' })
