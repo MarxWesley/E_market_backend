@@ -41,7 +41,7 @@ Você precisará ter instalado em sua máquina:
 ### 1. Clonar o Repositório
 
 ```bash
-git clone [https://github.com/MarxWesley/E_market_backend]
+git clone https://github.com/MarxWesley/E_market_backend
 cd E_market_backend
 ```
 
@@ -121,7 +121,7 @@ npm run start:prod
 
 A documentação interativa da API, gerada automaticamente pelo Swagger, estará disponível após a execução do projeto no seguinte endereço:
 
-[http://localhost:3000/docs](http://localhost:3000/docs)
+[http://localhost:3000/e_market/swagger](http://localhost:3000/e_market/swagger)
 
 ## 📂 Estrutura de Pastas
 
@@ -312,7 +312,7 @@ Este projeto foi desenvolvido como parte das atividades da disciplina.
 
 | Detalhe | Informação |
 | :--- | :--- |
-| **Autores** | [Pedro Vinícius e Wesley] |
+| **Autores** | [Pedro Vinícius](https://github.com/pedrovmdp) e [Wesley Marques](https://github.com/MarxWesley)|
 | **Curso** | [Sistemas de Informação] |
 | **Disciplina** | Desenvolvimento de Aplicações Web e Mobile |
 | **Professor** | [Anderson Furlan] |
